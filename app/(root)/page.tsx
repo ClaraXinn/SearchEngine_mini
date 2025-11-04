@@ -1,15 +1,10 @@
 import Image from "next/image";
 
-
-
 export default function Home() {
-  console.log("What am I? -- SERVER/CLIENT")
+  console.log("What am I? -- SERVER/CLIENT");
   return (
     <>
-      HOME
-
-
+      <h1 className="heading">Watch me go</h1>
     </>
-
   );
 }
