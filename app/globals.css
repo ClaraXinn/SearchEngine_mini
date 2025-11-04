@@ -10,6 +10,20 @@
     --background: #ffffff;
     --foreground: #171717;
   }
+
+  /* Kill focus visuals only inside the search pill */
+.search-form :is(:focus, :focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Extra safety: target the input directly too */
+.search-input:focus,
+.search-input:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 }
 
 /* -------------------- Theme tokens (v4) -------------------- */
@@ -93,8 +107,7 @@
   }
 
   .pink_container {
-    @apply flex w-full min-h-[530px] flex-col items-center justify-center bg-primary px-6 py-10;
-  }
+    @apply w-full bg-primary min-h-[530px]  flex justify-center items-center flex-col py-10 px-6;  }
 
   .tag {
     @apply relative rounded-sm bg-secondary px-6 py-3 font-sans font-bold uppercase;
@@ -174,8 +187,15 @@
   }
 
   .search-input {
-    @apply h-auto w-full flex-1 outline-none font-bold placeholder:font-semibold placeholder:text-black-100;
+    @apply h-auto w-full flex-1 font-bold
+           border-0 outline-none ring-0 shadow-none
+           focus:border-0 focus:outline-none focus:ring-0 focus:shadow-none
+           placeholder:font-semibold placeholder:text-black-100;
+    appearance: none;
+    -webkit-appearance: none;
   }
+
+
 
   .search-btn {
     @apply size-[50px] flex items-center justify-center rounded-full bg-black;
