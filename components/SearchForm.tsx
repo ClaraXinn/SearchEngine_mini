@@ -4,8 +4,6 @@ import {Search} from "lucide-react";
 
 const SearchForm = ({query}: {query?: string}) => {
 
-
-
   return (
     <>
         <Form action="/" className="search-form" >
