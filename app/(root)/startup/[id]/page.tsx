@@ -5,8 +5,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { title } from "node:process";
-import React from "react";
+import React, { Suspense } from "react";
 import markdownit from "markdown-it";
+import { Skeleton } from "@/components/ui/skeleton";
+import View from "@/components/View";
 
 const md = markdownit();
 
@@ -77,7 +79,26 @@ const page = async ({ params }: { params: { id: string } }) => {
               <p className="no-result">No details provided</p>
             )}
           </div>
+
+
+
+
+
+          
         </div>
+
+
+        <hr className="divider" />
+
+        {/* ToDO: Editor Selected Startups */}
+
+        <Suspense fallback={<Skeleton className="view_skeleton"/>}>
+            <View id={id}/>
+        </Suspense>
+
+
+
+
       </section>
     </>
   );
