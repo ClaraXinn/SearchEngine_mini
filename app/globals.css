@@ -1,6 +1,6 @@
 /* Tailwind v4 entry */
 @import "tailwindcss";
-
+@plugin '@tailwindcss/typography';
 /* -------------------- Base tokens -------------------- */
 @layer base {
   :root {

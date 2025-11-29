@@ -8,6 +8,8 @@ const config: Config = {
         "./components/**/*.{js,ts,jsx,tsx,mdx}",
         "./app/**/*.{js,ts,jsx,tsx,mdx}",
         "./sanity/**/*.{js,ts,jsx,tsx,mdx}",
+        "./src/**/*.{js,ts,jsx,tsx,mdx}",   // extra safety
+        "./**/*.{ts,tsx}",                  // catch all
     ],
     theme: {
         extend: {

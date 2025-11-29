@@ -6,6 +6,9 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { title } from "node:process";
 import React from "react";
+import markdownit from "markdown-it";
+
+const md = markdownit();
 
 const page = async ({ params }: { params: { id: string } }) => {
   const id = (await params).id;
@@ -14,6 +17,8 @@ const page = async ({ params }: { params: { id: string } }) => {
   const post = await client.fetch(STARTUPS_BY_ID_QUERY, { id });
 
   if (!post) return notFound();
+
+  const parsedContent = md.render(post?.pitch || "");
 
   return (
     <>
@@ -38,16 +43,39 @@ const page = async ({ params }: { params: { id: string } }) => {
 
           <div className="space-y-5 mt-10 max-w-4xl mx-auto">
             <div className="flex-between gap-5">
-              <Link href={`/user/${post.author?._id}`}>
+              <Link
+                href={`/user/${post.author?._id}`}
+                className="flex gap-2 items-center mb-3"
+              >
                 <Image
                   src={post.author.image} // URL string
                   alt={post.author.name}
                   width={64}
                   height={64}
-                  className="rounded-full object-cover"
+                  className="rounded-full drop-shadow-2xl"
                 />
+
+                <div>
+                  <p className="text-20-medium">{post.author.name}</p>
+                  <p className="text-16-medium !text-black-300">
+                    {post.author.username}
+                  </p>
+                </div>
               </Link>
+
+              <p className="category-tag">{post.category}</p>
             </div>
+
+            <h3 className="text-30-bold">Pitch Details</h3>
+
+            {parsedContent ? (
+              <article
+                className="prose max-w-4xl font-work-sans"
+                dangerouslySetInnerHTML={{ __html: parsedContent }}
+              />
+            ) : (
+              <p className="no-result">No details provided</p>
+            )}
           </div>
         </div>
       </section>
