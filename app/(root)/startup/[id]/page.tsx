@@ -49,13 +49,15 @@ const page = async ({ params }: { params: { id: string } }) => {
                 href={`/user/${post.author?._id}`}
                 className="flex gap-2 items-center mb-3"
               >
-                <Image
-                  src={post.author.image} // URL string
-                  alt={post.author.name}
-                  width={64}
-                  height={64}
-                  className="rounded-full drop-shadow-2xl"
-                />
+                <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                  <Image
+                    src={post.author.image}
+                    alt={post.author.name}
+                    width={40}
+                    height={40}
+                    className="object-cover"
+                  />
+                </div>
 
                 <div>
                   <p className="text-20-medium">{post.author.name}</p>
@@ -79,26 +81,15 @@ const page = async ({ params }: { params: { id: string } }) => {
               <p className="no-result">No details provided</p>
             )}
           </div>
-
-
-
-
-
-          
         </div>
-
 
         <hr className="divider" />
 
         {/* ToDO: Editor Selected Startups */}
 
-        <Suspense fallback={<Skeleton className="view_skeleton"/>}>
-            <View id={id}/>
+        <Suspense fallback={<Skeleton className="view_skeleton" />}>
+          <View id={id} />
         </Suspense>
-
-
-
-
       </section>
     </>
   );

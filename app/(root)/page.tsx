@@ -3,7 +3,8 @@ import StartupCard, { StartupTypeCard } from "@/components/StartupCard";
 import { client } from "@/sanity/lib/client";
 import { sanityFetch, SanityLive } from "@/sanity/lib/live";
 import { STARTUPS_QUERY } from "@/sanity/lib/queries";
- 
+import { auth } from "../auth";
+
 
 export default async function Home({
   searchParams,
@@ -19,6 +20,10 @@ export default async function Home({
     query: STARTUPS_QUERY,
     params,
   });
+  
+  const session = await auth();
+
+  console.log(session?.id)
 
 
   return (
