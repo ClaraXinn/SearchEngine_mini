@@ -5,30 +5,44 @@ import NextAuth from "next-auth"
 import GitHub from "next-auth/providers/github"
  
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [GitHub], 
-
-    session: {
-    strategy: "jwt",   // ⭐ ADD THIS LINE
+  providers: [
+    GitHub({
+      profile(profile) {
+        return {
+          id: String(profile.id),
+          name: profile.name,
+          email: profile.email,
+          image: profile.avatar_url,
+          username: profile.login,
+          bio: profile.bio,
+        };
+      },
+    }),
+  ],
+  
+  session: {
+    strategy: "jwt",
   },
+
   callbacks: {
-    async signIn({
-      user: { name, email, image }, 
-      profile: { id, login, bio }
-    }) {
+    async signIn({ user }) {
+
+      // Extract from user (NOT profile)
+      const { id, name, email, image, username, bio } = user;
 
       const existingUser = await client.withConfig({useCdn: false}).fetch(
         AUTHOR_BY_GITHUB_ID_QUERY, 
-        { id: id }
+        { id: String(id) }
       );
 
-      const authorId = id;
+      const authorId = String(id);
 
       if (!existingUser) {
         await writeClient.create({
           _type: 'author',
-          _id: authorId,       // ★ FIXED → MUST BE _id
+          _id: authorId,
           name,
-          username: login,
+          username,
           email,
           image,
           bio: bio || "",
@@ -38,21 +52,40 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return true;
     },
 
-    async jwt({ token, account, profile }) {
-      if (account && profile) {
-        const user = await client.withConfig({useCdn: false}).fetch(
+    async jwt({ token, account, user }) {
+
+      // FIRST LOGIN — NOW user is correct
+      if (account && user) {
+        const sanityUser = await client.withConfig({useCdn: false}).fetch(
           AUTHOR_BY_GITHUB_ID_QUERY,
-          { id: profile?.id }
+          { id: String(user.id) }
         );
 
-        token.id = user?._id || profile.id; // ★ FIXED minimal logic
+        token.id = sanityUser?._id || String(user.id);
+        return token;
       }
+
+      // HOMEPAGE — email fallback
+      if (token.email) {
+        const sanityUser = await client.withConfig({useCdn: false}).fetch(
+          `*[_type == "author" && email == $email][0]{ _id }`,
+          { email: token.email }
+        );
+
+        if (sanityUser?._id) token.id = sanityUser._id;
+      }
+
       return token;
     },
 
     async session({ session, token }) {
-      Object.assign(session, { id: token.id });
+      session.id = token.id;
       return session;
     },
   }
 });
+
+
+export const config = {
+  runtime: "nodejs",
+};
