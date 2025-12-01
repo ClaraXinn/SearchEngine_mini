@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import 'easymde/dist/easymde.min.css'
+import { Toaster } from "@/components/ui/toaster";
 
 
 const workSans = localFont({
@@ -58,7 +59,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${workSans.variable} light`}>
-        <body>{children}</body>
+        <body>{children}
+        <Toaster /> 
+        </body>
     </html>
   );
 }
