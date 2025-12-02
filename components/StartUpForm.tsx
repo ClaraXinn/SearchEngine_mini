@@ -10,6 +10,7 @@ import { formSchema } from "@/lib/validation";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { createPitch } from "@/lib/actions";
 
 // Load MDEditor on the client only
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
@@ -42,15 +43,15 @@ const StartUpForm = () => {
       await formSchema.parseAsync(formValues);
 
       // TODO: Replace with your real Sanity action
-      // const result = await createPitch(prevState, formData, pitch);
+      const result = await createPitch(prevState, formData, pitch);
 
       console.log("FORM OK:", formValues);
 
       // Fake result object (remove later)
-      const result = {
-        status: "SUCCESS",
-        _id: "fake-id-123",
-      };
+      // const result = {
+      //   status: "SUCCESS",
+      //   _id: "fake-id-123",
+      // };
 
       if (result.status === "SUCCESS") {
         toast({
