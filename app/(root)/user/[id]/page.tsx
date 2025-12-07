@@ -3,10 +3,11 @@ import { client } from "@/sanity/lib/client";
 import { AUTHOR_BY_ID_QUERY } from "@/sanity/lib/queries";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import React from "react";
+import React, { Suspense } from "react";
 import UserStartups from "@/components/UserStartups";
+import { StartupCardSkeleton } from "@/components/StartupCard";
 
-// export const experimental_ppr = true;
+export const cacheComponents = false;
 
 const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
@@ -21,7 +22,9 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
       <section className="profile_container">
         <div className="profile_card">
           <div className="profile_title">
-            <h3 className="text-24-black uppercase text-center line-clamp-1">{user.name}</h3>
+            <h3 className="text-24-black uppercase text-center line-clamp-1">
+              {user.name}
+            </h3>
           </div>
 
           <Image
@@ -40,15 +43,16 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
         </div>
 
         <div className="flex-1 flex flex-col gap-5 lg:mt-5">
-            <p className="text-30-bold">
-                {session?.id === id ? "Your": "All"} Startups
-            </p>
-            <ul className="card_grid-sm">
-              <UserStartups/>
-            </ul>
+          <p className="text-30-bold">
+            {session?.id === id ? "Your" : "All"} Startups
+          </p>
+          <ul className="card_grid-sm">
+            <Suspense fallback={<StartupCardSkeleton />}>
+              <UserStartups id={id} />
+            </Suspense>
+            <UserStartups id={id} />
+          </ul>
         </div>
-
-
       </section>
     </>
   );
