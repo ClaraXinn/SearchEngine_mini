@@ -22,6 +22,8 @@ const nextConfig: NextConfig = {
 
   cacheComponents: true,
 
+
+
   devIndicators: {
     position: "bottom-right",
   },
